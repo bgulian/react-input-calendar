@@ -9,13 +9,6 @@ var Utils = require('./Utils');
 
 var _keyDownActions = Utils.keyDownActions;
 
-function toDate(date) {
-  if (date instanceof Date) {
-    return date;
-  }
-  return new Date(date);
-}
-
 module.exports = React.createClass({
 
     propTypes: {
@@ -34,9 +27,9 @@ module.exports = React.createClass({
     },
 
     getInitialState: function() {
-        var date = this.props.date ? moment(toDate(this.props.date)) : null,
-            minDate = this.props.minDate ? moment(toDate(this.props.minDate)) : null,
-            maxDate = this.props.maxDate ? moment(toDate(this.props.maxDate)) : null,
+        var date = this.props.date ? moment(this.toDate(this.props.date)) : null,
+            minDate = this.props.minDate ? moment(this.toDate(this.props.minDate)) : null,
+            maxDate = this.props.maxDate ? moment(this.toDate(this.props.maxDate)) : null,
             inputFieldId = this.props.inputFieldId ? this.props.inputFieldId : null,
             format = this.props.format || 'MM-DD-YYYY',
             minView = parseInt(this.props.minView, 10) || 0,
@@ -66,13 +59,25 @@ module.exports = React.createClass({
 
     componentWillReceiveProps: function(nextProps) {
         this.setState({
-            date: nextProps.date ? moment(toDate(nextProps.date)) : this.state.date,
-            inputValue: nextProps.date ? moment(toDate(nextProps.date)).format(this.state.format) : null
+            date: nextProps.date ? moment(this.toDate(nextProps.date)) : this.state.date,
+            inputValue: nextProps.date ? moment(this.toDate(nextProps.date)).format(this.state.format) : null
         });
     },
 
     keyDown: function (e) {
         _keyDownActions.call(this, e.keyCode);
+    },
+
+    toDate: function(date) {
+        if (date instanceof Date) {
+            return date;
+        } else {
+            if (this.state.format == "YYYY-MM-DD") {
+                date = date.trim() + "T23:00:00";
+            }
+        }
+  
+        return new Date(date);
     },
 
     checkIfDateDisabled: function (date) {
