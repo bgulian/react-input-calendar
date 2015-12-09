@@ -72,7 +72,7 @@ module.exports = React.createClass({displayName: "exports",
         if (date instanceof Date) {
             return date;
         } else {
-            if (this.state && (this.state.format == "YYYY-MM-DD")) {
+            if (this.state && (this.state.computableFormat == "YYYY-MM-DD")) {
                 date = date.trim() + "T23:00:00";
             } else {
                 date = date.trim();
